@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Life Counter</string>
+    <string name="up">+</string>
+    <string name="down">-</string>
+    <string name="reset">Reset</string>
+    <string name="pick_color">Pick Theme Color</string>
+    <string name="theme_color">Theme Color</string>
+    <string name="start_flip">Flip Card</string>
+
+</resources>
