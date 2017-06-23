@@ -1,9 +1,11 @@
 package com.stick.mtglifecounter;
 
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
@@ -14,29 +16,26 @@ public class FlipActivity extends AppCompatActivity {
     private final int ANIMATION_COUNT = 10 - ((int) System.currentTimeMillis() % 2);
     private boolean isHeads = false;
     private int animationCounter = 0;
+    private GestureDetectorCompat mDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flip);
 
-        waitForImageWidthThenAnimate();
+        mDetector = new GestureDetectorCompat(this, new FlipGestureListener());
     }
 
-    private void waitForImageWidthThenAnimate()
-    {
-        final ImageView imageView = getImageView();
-        imageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                imageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                startScaleAnimation(imageView.getWidth() / 2);
-            }
-        });
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        this.mDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 
-    private void startScaleAnimation(int centerX)
+    private void startScaleAnimation()
     {
+        int centerX = getImageView().getWidth() / 2;
+
         final ScaleAnimation animationShrink = new ScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, centerX, 0);
         final ScaleAnimation animationGrow = new ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, centerX, 0);
 
@@ -136,6 +135,16 @@ public class FlipActivity extends AppCompatActivity {
     private ImageView getImageView()
     {
         return (ImageView) findViewById(R.id.flip_image);
+    }
+
+    class FlipGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onFling(MotionEvent event1, MotionEvent event2,
+                               float velocityX, float velocityY) {
+            startScaleAnimation();
+            return true;
+        }
     }
 }
 
