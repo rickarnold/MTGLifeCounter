@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         {
             case R.id.start_flip:
                 Intent intent = new Intent(this, FlipActivity.class);
+                intent.putExtra("COLOR", currentColor.ordinal());
                 startActivity(intent);
                 return true;
             case R.id.reset_game:
